@@ -6,12 +6,15 @@ import React, {
 	useState,
 	ReactNode,
 } from "react"
+import Role from "../enum/role"
 // import axios from 'axios'
 // import JWTDecode from 'jwt-decode'
 // import Cookies from 'js-cookie'
 
 interface IAuth {
 	userId: string
+	username: string
+	role: Role
 	loggedIn: boolean
 }
 
@@ -23,7 +26,7 @@ type AuthContextType = {
 // export const AuthContext = createContext<AuthContextType>(null)
 
 export const AuthContext = createContext<AuthContextType>({
-	auth: { userId: "", loggedIn: false },
+	auth: { userId: "", username: "", role: Role.User, loggedIn: false },
 	getLoggedIn: () => {},
 })
 
@@ -35,7 +38,12 @@ interface IAuthContextProviderProps {
 export const AuthContextProvider: React.FC<IAuthContextProviderProps> = (
 	props
 ) => {
-	const [auth, setAuth] = useState<IAuth>({ loggedIn: false, userId: "" })
+	const [auth, setAuth] = useState<IAuth>({
+		userId: "",
+		username: "",
+		role: Role.User,
+		loggedIn: false,
+	})
 	// const [userId, setUserId] = useState("")
 
 	async function getLoggedIn() {
@@ -52,7 +60,12 @@ export const AuthContextProvider: React.FC<IAuthContextProviderProps> = (
 			// const tokens = Cookies.get()
 			// console.log("Token: " + tokens)
 
-			setAuth({ loggedIn: getLoggedInRes.data, userId: "" })
+			setAuth({
+				userId: "",
+				username: "",
+				role: Role.User,
+				loggedIn: getLoggedInRes.data,
+			})
 
 			// setLoggedIn(loggedInRes.data);
 		} catch (err) {

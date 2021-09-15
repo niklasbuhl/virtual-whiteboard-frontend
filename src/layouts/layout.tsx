@@ -1,9 +1,11 @@
 import React, { ReactNode } from "react"
 import { useContext } from "react"
-import { Link } from "react-router-dom"
+import Footer from "../components/footer"
+// import { Link } from "react-router-dom"
 // import { addEmitHelper } from "typescript";
-import Login from "../components/login"
-import LogoutBtn from "../components/logoutBtn"
+// import Login from "../components/login"
+// import LogoutBtn from "../components/logoutBtn"
+import Navbar from "../components/navbar"
 import { AuthContext } from "../context/authContextProvider"
 
 export interface ILayoutProps {
@@ -18,15 +20,10 @@ export const Layout: React.FC<ILayoutProps> = (props) => {
 
 	return (
 		<>
-			<header>
-				<Link to="/">Home</Link>
-				{auth.loggedIn === false && <Login />}
-				{auth.loggedIn === false && <Link to="/register">Register</Link>}
-				{auth.loggedIn === true && <LogoutBtn />}
-				{/* <Register /> */}
-			</header>
-			<main>{props.children}</main>
-			<footer>Made by Niklas Buhl</footer>
+			<Navbar />
+			<div className="d-flex container flex-grow">{props.children}</div>
+			<Footer />
+			{/* <footer>Made by Niklas Buhl</footer> */}
 		</>
 	)
 }

@@ -9,7 +9,7 @@ export const Register: React.FC<RegisterProps> = () => {
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [passwordVerify, setPasswordVerify] = useState("")
-	const [message, setMessage] = useState("")
+	const [message, setMessage] = useState("Message")
 
 	const { getLoggedIn } = useContext(AuthContext)
 	// const history = useHistory()
@@ -35,19 +35,20 @@ export const Register: React.FC<RegisterProps> = () => {
 
 			await getLoggedIn()
 		} catch (err: any) {
-			setMessage(err.response.data.errorMessage)
-
+			if (err.response !== undefined) {
+				setMessage(err.response.data.errorMessage)
+			}
 			console.log(err)
+			console.log("Probably not connected to the backend.")
 		}
 	}
 
 	// React.useEffect(() => {}, [])
 	return (
-		<div>
-			<form onSubmit={register}>
-				<span>{message}</span>
-
+		<div className="d-flex flex-column justify-content-center col-6">
+			<form className="d-flex flex-column col-12" onSubmit={register}>
 				<input
+					className="form-control mb-2"
 					type="text"
 					placeholder="Username"
 					onChange={(e) => setUsername(e.target.value)}
@@ -55,25 +56,34 @@ export const Register: React.FC<RegisterProps> = () => {
 				/>
 
 				<input
+					className="form-control mb-2"
 					type="email"
 					placeholder="Email"
 					onChange={(e) => setEmail(e.target.value)}
 					value={email}
 				/>
 				<input
+					className="form-control mb-2"
 					type="password"
 					placeholder="Password"
 					onChange={(e) => setPassword(e.target.value)}
 					value={password}
 				/>
 				<input
+					className="form-control mb-2"
 					type="password"
 					placeholder="Verify your password"
 					onChange={(e) => setPasswordVerify(e.target.value)}
 					value={passwordVerify}
 				/>
-				<button type="submit">Register</button>
+				<button className="form-control btn btn-primary mb-2" type="submit">
+					Register
+				</button>
 			</form>
+
+			<div className="d-flex justify-content-center">
+				<code className="text-light">{message}</code>
+			</div>
 		</div>
 	)
 }

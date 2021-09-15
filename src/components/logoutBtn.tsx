@@ -17,7 +17,9 @@ function LogoutBtn() {
 
 	return (
 		<div>
-			<button onClick={logOut}>Log out</button>
+			<button className="btn btn-primary" onClick={logOut}>
+				Logout
+			</button>
 		</div>
 	)
 }
