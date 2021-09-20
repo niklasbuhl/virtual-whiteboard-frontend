@@ -50,7 +50,7 @@ export const Login: React.FC = () => {
 				<input
 					className="form-control me-2"
 					type="email"
-					placeholder="Email"
+					placeholder="Email or Username"
 					onChange={(e) => setEmail(e.target.value)}
 					value={email}
 				/>
