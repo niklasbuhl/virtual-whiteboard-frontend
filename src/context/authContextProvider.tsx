@@ -11,22 +11,29 @@ import Role from "../enum/role"
 // import JWTDecode from 'jwt-decode'
 // import Cookies from 'js-cookie'
 
-interface IAuth {
+export interface IAuth {
 	userId: string
 	username: string
 	role: Role
-	loggedIn: boolean
 }
 
 type AuthContextType = {
 	auth: IAuth
+	loggedIn: boolean
+	authReady: boolean
+	isLoggedIn: () => Boolean
 	getLoggedIn: () => void
 }
 
 // export const AuthContext = createContext<AuthContextType>(null)
 
 export const AuthContext = createContext<AuthContextType>({
-	auth: { userId: "", username: "", role: Role.User, loggedIn: false },
+	auth: { userId: "", username: "", role: Role.User },
+	loggedIn: false,
+	authReady: false,
+	isLoggedIn: () => {
+		return true
+	},
 	getLoggedIn: () => {},
 })
 
@@ -42,9 +49,15 @@ export const AuthContextProvider: React.FC<IAuthContextProviderProps> = (
 		userId: "",
 		username: "",
 		role: Role.User,
-		loggedIn: false,
 	})
+	const [loggedIn, setLoggedIn] = useState(false)
 	// const [userId, setUserId] = useState("")
+
+	const [authReady, setAuthReady] = useState(false)
+
+	const isLoggedIn = () => {
+		return loggedIn
+	}
 
 	async function getLoggedIn() {
 		console.log("Getting logged in boolean.")
@@ -60,14 +73,21 @@ export const AuthContextProvider: React.FC<IAuthContextProviderProps> = (
 			// const tokens = Cookies.get()
 			// console.log("Token: " + tokens)
 
-			setAuth({
-				userId: "",
-				username: "",
-				role: Role.User,
-				loggedIn: getLoggedInRes.data,
-			})
+			if (getLoggedInRes.data) {
+				const getLoggedInUserRes = await axios.get(
+					process.env.REACT_APP_BACKEND_URL + "/loggedInUser"
+				)
 
-			// setLoggedIn(loggedInRes.data);
+				if (getLoggedInUserRes)
+					setAuth({
+						userId: getLoggedInUserRes.data._id,
+						username: getLoggedInUserRes.data.username,
+						role: getLoggedInUserRes.data.role,
+					})
+			}
+
+			setLoggedIn(getLoggedInRes.data)
+			setAuthReady(true)
 		} catch (err) {
 			console.log(err)
 		}
@@ -78,7 +98,8 @@ export const AuthContextProvider: React.FC<IAuthContextProviderProps> = (
 	}, [])
 
 	return (
-		<AuthContext.Provider value={{ auth, getLoggedIn }}>
+		<AuthContext.Provider
+			value={{ auth, loggedIn, authReady, isLoggedIn, getLoggedIn }}>
 			{props.children}
 		</AuthContext.Provider>
 	)

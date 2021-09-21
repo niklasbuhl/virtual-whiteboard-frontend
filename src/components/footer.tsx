@@ -9,7 +9,9 @@ const Footer: React.FC = () => {
 	// const { auth } = useContext(AuthContext)
 
 	return (
-		<footer className="d-flex fixed-bottom flex-wrap justify-content-between align-items-center">
+		<footer
+			className="d-flex fixed-bottom flex-wrap justify-content-between align-items-center"
+			style={{ background: "white" }}>
 			<div className="container">
 				<div className="d-flex align-items-center justify-content-center">
 					<p className="text-secondary">

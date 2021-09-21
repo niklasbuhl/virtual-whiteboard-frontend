@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom"
 import { AuthContext } from "../context/authContextProvider"
 
 export const Login: React.FC = () => {
-	const [email, setEmail] = useState("")
+	const [user, setUser] = useState("")
 	const [password, setPassword] = useState("")
 	const { getLoggedIn } = useContext(AuthContext)
 	const history = useHistory()
@@ -16,7 +16,7 @@ export const Login: React.FC = () => {
 
 		try {
 			const loginData = {
-				email,
+				user,
 				password,
 			}
 
@@ -49,10 +49,10 @@ export const Login: React.FC = () => {
 			<form className="d-flex flex-row" onSubmit={login}>
 				<input
 					className="form-control me-2"
-					type="email"
+					// type="email"
 					placeholder="Email or Username"
-					onChange={(e) => setEmail(e.target.value)}
-					value={email}
+					onChange={(e) => setUser(e.target.value)}
+					value={user}
 				/>
 
 				<input
