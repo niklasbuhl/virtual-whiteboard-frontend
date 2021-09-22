@@ -1,6 +1,34 @@
 import axios from "axios"
 import { fabric } from "fabric"
 import checkViewportBoundaries from "../../functions/checkViewportBoundaries"
+import IBackendPath from "../../interfaces/interface.backendPath"
+import ICoords from "../../interfaces/interface.coords"
+
+export const getAllPaths = async (canvas: fabric.Canvas) => {
+	const url = process.env.REACT_APP_BACKEND_URL + "/path/getAll"
+
+	// console.log(url)
+
+	const res = await axios.get(url)
+
+	const paths = res.data
+
+	for (const path of paths) {
+		addPathFromBackend(
+			canvas,
+			path._id,
+			path.path,
+			{
+				x: path.pos.x,
+				y: path.pos.y,
+			},
+			{
+				x: path.originPos.x,
+				y: path.originPos.y,
+			}
+		)
+	}
+}
 
 export const deletePath = async (
 	canvas: fabric.Canvas,
@@ -25,16 +53,16 @@ export const deletePath = async (
 }
 
 interface IPathInfo {
-	pathStr: string | undefined
-	pX: number | undefined
-	pY: number | undefined
+	pathStr: string
+	pX: number
+	pY: number
 }
 
 export const getPathInfo = (path: fabric.Path): IPathInfo => {
 	const pathInfo = {
 		pathStr: pathArrayToString(path.path),
-		pX: path.left,
-		pY: path.top,
+		pX: path.left as number,
+		pY: path.top as number,
 	}
 
 	return pathInfo
@@ -69,11 +97,12 @@ export const pathArrayToString = (pathArray: fabric.Path.path): string => {
 
 const editPath = (canvas: fabric.Canvas, path: fabric.Path) => {
 	// Edit Appearance
-	path.hasControls = false
-	path.stroke = "#000000"
-	path.strokeWidth = 4
-	path.strokeLineCap = "square"
-	path.perPixelTargetFind = true
+
+	path._set("hasControls", false)
+	path._set("stroke", "#000000")
+	path._set("strokeWidth", 4)
+	path._set("strokeLineCap", "square")
+	path._set("perPixelTargetFind", true)
 
 	/*
   opt.path.strokeDashArray = [10, 5]
@@ -83,69 +112,110 @@ const editPath = (canvas: fabric.Canvas, path: fabric.Path) => {
   opt.path.strokeUniform = true		
   */
 
-	// Moved
-	path.on("moved", () => {
-		// console.log("Path is moved...")
+	// ID
 
+	path.on("mousedown", () => {
+		const xy: ICoords = {
+			x: path.left as number,
+			y: path.top as number,
+		}
+
+		path._set("vwb_currentPosition", xy)
+	})
+
+	// Moved
+	path.on("moved", async () => {
+		// console.log("Path is moved...")
 		checkViewportBoundaries(canvas, path)
 
 		const pathInfo = getPathInfo(path)
 
-		console.log(`Moved Path - pX: ${pathInfo.pX}, pY: ${pathInfo.pY}.`)
-		console.log(`Moved Path - path: ${pathInfo.pathStr}`)
+		// console.log(`Moved Path - pX: ${pathInfo.pX}, pY: ${pathInfo.pY}.`)
+		// console.log(`Moved Path - path: ${pathInfo.pathStr}`)
 
-		console.log("TODO Upload changes to backend.")
-	})
+		// console.log("TODO Upload changes to backend.")
 
-	// Mousedown
-	/*
-	path.on("mousedown", (obj) => {
-		if (obj) {
+		try {
+			const url = process.env.REACT_APP_BACKEND_URL + "/path/"
+
+			const response = await axios.put(url, {
+				// @ts-expect-error
+				id: path.vwb_id,
+				x: pathInfo.pX,
+				y: pathInfo.pY,
+			})
+
+			if (!response.data) {
+			}
+		} catch (err) {
+			console.log(err)
+
 			// @ts-expect-error
-			const pathInfo = getPathInfo(obj.target)
+			path._set("left", path.vwb_currentPosition.x)
 
-			console.log(`Mousedown - pX: ${pathInfo.pX}, pY: ${pathInfo.pY}.`)
-			console.log(`Mousedown - path: ${pathInfo.pathStr}`)
+			// @ts-expect-error
+			path._set("top", path.vwb_currentPosition.y)
+
+			canvas.add(path)
 		}
 	})
-	*/
+}
 
-	// Mouseup
-	/*
-	path.on("mouseup", (obj) => {
-		if (obj) {
-			// @ts-expect-error
-			const pathInfo = getPathInfo(obj.target)
+export const addPathFromBackend = async (
+	canvas: fabric.Canvas,
+	id: string,
+	pathStr: string,
+	pos: ICoords,
+	originPos: ICoords
+) => {
+	// console.log(`Path String: ${pathStr}`)
 
-			console.log(`Mouseup - pX: ${pathInfo.pX}, pY: ${pathInfo.pY}.`)
-			console.log(`Mouseup - path: ${pathInfo.pathStr}`)
+	const newPath = new fabric.Path(pathStr, {
+		fill: undefined,
+	})
+
+	newPath._set("vwb_id", id)
+
+	editPath(canvas, newPath)
+
+	const x = originPos.x + (pos.x - originPos.x)
+	const y = originPos.y + (pos.y - originPos.y)
+
+	newPath.set({ left: x, top: y })
+
+	// console.log(newPath)
+
+	canvas.add(newPath)
+}
+
+export const uploadPath = async (path: fabric.Path) => {
+	// console.log("Save new text to Backend...")
+
+	try {
+		const pathInfo = getPathInfo(path)
+
+		// Receive confirmation and _id
+
+		var newPath: IBackendPath = {
+			pathStr: pathInfo.pathStr as string,
+			x: pathInfo.pX,
+			y: pathInfo.pY,
 		}
-	})
-	*/
-}
 
-export const addPath = (canvas: fabric.Canvas, pathStr: string, id: string) => {
-	console.log("What do I need...")
+		const url = process.env.REACT_APP_BACKEND_URL + "/path/"
 
-	var path = new fabric.Path(pathStr, {
-		// @ts-expect-error
-		fill: false,
-	})
+		const response = await axios.post(url, newPath)
 
-	path._set("vwb_id", id)
+		// console.log(response.data)
 
-	editPath(canvas, path)
+		if (response.data.id) {
+			path._set("vwb_id", response.data.id)
+		}
 
-	canvas.add(path)
-}
-
-// REST API
-export const postPath = (path: fabric.Path) => {
-	const pathInfo = getPathInfo(path)
-
-	console.log("New Path: " + pathInfo.pathStr)
-	console.log(`pX: ${pathInfo.pX}, pY: ${pathInfo.pY}`)
-	console.log("TODO Save new path to backend...")
+		// console.log("Success saving path.")
+	} catch (err) {
+		console.log(err)
+	}
 }
 
 export default editPath

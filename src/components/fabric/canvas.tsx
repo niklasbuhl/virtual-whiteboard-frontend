@@ -4,7 +4,7 @@ import { AuthContext } from "../../context/authContextProvider"
 import { Tool, ToolContext } from "../../context/toolContext"
 import addImageURL, { getAllImages, deleteImage } from "./image"
 import addIText, { deleteText, getAllTexts } from "./iText"
-import editPath, { deletePath } from "./path"
+import editPath, { uploadPath, deletePath, getAllPaths } from "./path"
 
 const Canvas = () => {
 	const [canvas, setCanvas] = useState<fabric.Canvas>()
@@ -30,22 +30,26 @@ const Canvas = () => {
 		var c = initCanvas()
 
 		// Path
-		c.on("path:created", (opt) => {
-			// @ts-expect-error
-			if (opt.path) {
-				// @ts-expect-error
-				editPath(c, opt.path)
+		c.on("path:created", (object) => {
+			console.log(object)
 
-				/*
+			// @ts-expect-error
+			if (object.path) {
 				// @ts-expect-error
-				uploadPath(opt.path)
-				*/
+				editPath(c, object.path)
+
+				// @ts-expect-error
+				console.log(object.path)
+
+				// @ts-expect-error
+				uploadPath(object.path)
 			}
 		})
 
 		// Get all content from backend
 		getAllTexts(c)
 		getAllImages(c)
+		getAllPaths(c)
 
 		/*
 
@@ -135,6 +139,7 @@ const Canvas = () => {
 					// Get all objects from server
 					getAllTexts(canvas)
 					getAllImages(canvas)
+					getAllPaths(canvas)
 
 					break
 

@@ -1,7 +1,7 @@
-interface IBackendImage {
+interface IBackendPath {
 	pathStr: string
-	posX: number
-	posY: number
+	x: number
+	y: number
 }
 
-export default IBackendImage
+export default IBackendPath
