@@ -6,7 +6,7 @@ export type Props = {}
 
 export const ToolBox: React.FC<Props> = () => {
 	const { tool, setTool } = useContext(ToolContext)
-	const { auth, loggedIn } = useContext(AuthContext)
+	const { loggedIn } = useContext(AuthContext)
 
 	return (
 		<div className="d-flex">

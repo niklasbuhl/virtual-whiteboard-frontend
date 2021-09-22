@@ -1,10 +1,6 @@
 import React, { ReactNode } from "react"
 import { useContext } from "react"
 import Footer from "../components/footer"
-// import { Link } from "react-router-dom"
-// import { addEmitHelper } from "typescript";
-// import Login from "../components/login"
-// import LogoutBtn from "../components/logoutBtn"
 import Navbar from "../components/navbar"
 import { AuthContext } from "../context/authContextProvider"
 
@@ -13,7 +9,7 @@ export interface ILayoutProps {
 }
 
 export const Layout: React.FC<ILayoutProps> = (props) => {
-	const { auth, loggedIn } = useContext(AuthContext)
+	const { loggedIn } = useContext(AuthContext)
 	// const [, set] = useState();
 	// useEffect(() => {}, [])
 	console.log("auth.loggedIn: " + loggedIn)

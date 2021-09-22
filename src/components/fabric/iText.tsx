@@ -1,7 +1,5 @@
 import axios from "axios"
 import { fabric } from "fabric"
-import { useContext } from "react"
-import { AuthContext } from "../../context/authContextProvider"
 import checkViewportBoundaries from "../../functions/checkViewportBoundaries"
 import ICoords from "../../interfaces/interface.coords"
 import IFrontendText from "../../interfaces/interface.backendText"

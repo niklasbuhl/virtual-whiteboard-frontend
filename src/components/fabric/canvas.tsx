@@ -1,20 +1,15 @@
-import axios from "axios"
 import { fabric } from "fabric"
-// import Popup from "reactjs-popup"
-// import { Options } from "pretty-format"
 import { useContext, useEffect, useState } from "react"
-import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript"
 import { AuthContext } from "../../context/authContextProvider"
 import { Tool, ToolContext } from "../../context/toolContext"
 import addImageURL, { deleteImage } from "./image"
-// import canvasContext from "./canvasContext"
 import addIText, { deleteText, getAllTexts } from "./iText"
-import editPath, { addPath, deletePath } from "./path"
+import editPath, { deletePath } from "./path"
 
 const Canvas = () => {
 	const [canvas, setCanvas] = useState<fabric.Canvas>()
 	const { tool, setTool } = useContext(ToolContext)
-	const { loggedIn, isLoggedIn } = useContext(AuthContext)
+	const { loggedIn } = useContext(AuthContext)
 
 	// Initialize
 	useEffect(() => {
