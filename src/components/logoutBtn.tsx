@@ -2,9 +2,10 @@ import axios from "axios"
 import React, { useContext } from "react"
 import { useHistory } from "react-router-dom"
 import { AuthContext } from "../context/authContextProvider"
+import Role from "../enum/role"
 
 function LogoutBtn() {
-	const { getLoggedIn } = useContext(AuthContext)
+	const { getLoggedIn, setRole } = useContext(AuthContext)
 
 	const history = useHistory()
 
@@ -12,6 +13,7 @@ function LogoutBtn() {
 		// await axios.get("http://localhost:5000/auth/logout");
 		await axios.get(process.env.REACT_APP_BACKEND_URL + "/logout")
 		await getLoggedIn()
+		setRole(Role.Unknown)
 		history.push("/")
 	}
 

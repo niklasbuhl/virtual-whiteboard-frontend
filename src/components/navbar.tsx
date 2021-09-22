@@ -22,11 +22,12 @@ const Navbar: React.FC = () => {
 								User
 							</Link>
 						)}
-						{(auth.role === Role.Moderator || auth.role === Role.Admin) && (
-							<Link className="nav-link" to="/moderator/">
-								Moderator
-							</Link>
-						)}
+						{loggedIn === true &&
+							(auth.role === Role.Moderator || auth.role === Role.Admin) && (
+								<Link className="nav-link" to="/moderator/">
+									Moderator
+								</Link>
+							)}
 					</div>
 				</div>
 				<div className="d-flex align-items-center">

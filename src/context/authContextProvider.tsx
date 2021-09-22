@@ -5,6 +5,8 @@ import React, {
 	useEffect,
 	useState,
 	ReactNode,
+	Dispatch,
+	SetStateAction,
 } from "react"
 import Role from "../enum/role"
 // import axios from 'axios'
@@ -21,6 +23,7 @@ type AuthContextType = {
 	auth: IAuth
 	loggedIn: boolean
 	role: Role
+	setRole: Dispatch<SetStateAction<Role>>
 	authReady: boolean
 	isLoggedIn: () => Boolean
 	getLoggedIn: () => void
@@ -32,6 +35,7 @@ export const AuthContext = createContext<AuthContextType>({
 	auth: { userId: "", username: "", role: Role.User },
 	loggedIn: false,
 	role: Role.User,
+	setRole: () => {},
 	authReady: false,
 	isLoggedIn: () => {
 		return true
@@ -108,7 +112,15 @@ export const AuthContextProvider: React.FC<IAuthContextProviderProps> = (
 
 	return (
 		<AuthContext.Provider
-			value={{ auth, loggedIn, authReady, isLoggedIn, getLoggedIn, role }}>
+			value={{
+				auth,
+				loggedIn,
+				authReady,
+				isLoggedIn,
+				getLoggedIn,
+				role,
+				setRole,
+			}}>
 			{props.children}
 		</AuthContext.Provider>
 	)
