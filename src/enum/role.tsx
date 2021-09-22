@@ -1,4 +1,5 @@
 enum Role {
+	Unknown = "Unknown",
 	User = "User",
 	Moderator = "Moderator",
 	Admin = "Admin",

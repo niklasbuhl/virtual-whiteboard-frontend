@@ -57,7 +57,7 @@ export const AuthContextProvider: React.FC<IAuthContextProviderProps> = (
 
 	const [authReady, setAuthReady] = useState(false)
 
-	const [role, setRole] = useState(Role.User)
+	const [role, setRole] = useState(Role.Unknown)
 
 	const isLoggedIn = () => {
 		return loggedIn
@@ -91,6 +91,8 @@ export const AuthContextProvider: React.FC<IAuthContextProviderProps> = (
 
 					setRole(getLoggedInUserRes.data.role)
 				}
+			} else {
+				setRole(Role.Unknown)
 			}
 
 			setLoggedIn(getLoggedInRes.data)

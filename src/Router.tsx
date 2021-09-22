@@ -28,7 +28,7 @@ function Router() {
 					</Route>
 				)}
 
-				{(role === Role.Admin || role === Role.Moderator) && (
+				{loggedIn === true && (role === Role.Admin || role === Role.Moderator) && (
 					<Route path="/moderator/">
 						<ModeratorPage />
 					</Route>
