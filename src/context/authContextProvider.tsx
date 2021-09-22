@@ -20,6 +20,7 @@ export interface IAuth {
 type AuthContextType = {
 	auth: IAuth
 	loggedIn: boolean
+	role: Role
 	authReady: boolean
 	isLoggedIn: () => Boolean
 	getLoggedIn: () => void
@@ -30,6 +31,7 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType>({
 	auth: { userId: "", username: "", role: Role.User },
 	loggedIn: false,
+	role: Role.User,
 	authReady: false,
 	isLoggedIn: () => {
 		return true
@@ -55,6 +57,8 @@ export const AuthContextProvider: React.FC<IAuthContextProviderProps> = (
 
 	const [authReady, setAuthReady] = useState(false)
 
+	const [role, setRole] = useState(Role.User)
+
 	const isLoggedIn = () => {
 		return loggedIn
 	}
@@ -78,12 +82,15 @@ export const AuthContextProvider: React.FC<IAuthContextProviderProps> = (
 					process.env.REACT_APP_BACKEND_URL + "/loggedInUser"
 				)
 
-				if (getLoggedInUserRes)
+				if (getLoggedInUserRes) {
 					setAuth({
 						userId: getLoggedInUserRes.data._id,
 						username: getLoggedInUserRes.data.username,
 						role: getLoggedInUserRes.data.role,
 					})
+
+					setRole(getLoggedInUserRes.data.role)
+				}
 			}
 
 			setLoggedIn(getLoggedInRes.data)
@@ -99,7 +106,7 @@ export const AuthContextProvider: React.FC<IAuthContextProviderProps> = (
 
 	return (
 		<AuthContext.Provider
-			value={{ auth, loggedIn, authReady, isLoggedIn, getLoggedIn }}>
+			value={{ auth, loggedIn, authReady, isLoggedIn, getLoggedIn, role }}>
 			{props.children}
 		</AuthContext.Provider>
 	)

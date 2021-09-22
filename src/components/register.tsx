@@ -9,7 +9,8 @@ export const Register: React.FC<RegisterProps> = () => {
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [passwordVerify, setPasswordVerify] = useState("")
-	const [message, setMessage] = useState("Message")
+	const [message, setMessage] = useState("")
+	const [messageCSS, setMessageCSS] = useState("text-success")
 
 	const { getLoggedIn } = useContext(AuthContext)
 	// const history = useHistory()
@@ -30,6 +31,7 @@ export const Register: React.FC<RegisterProps> = () => {
 			const registerRes = await axios.post(url, registerData)
 
 			setMessage(registerRes.data.message)
+			setMessageCSS("text-success")
 
 			console.log(registerRes)
 
@@ -37,6 +39,7 @@ export const Register: React.FC<RegisterProps> = () => {
 		} catch (err: any) {
 			if (err.response !== undefined) {
 				setMessage(err.response.data.errorMessage)
+				setMessageCSS("text-danger")
 			}
 			console.log(err)
 			console.log("Probably not connected to the backend.")
@@ -82,7 +85,7 @@ export const Register: React.FC<RegisterProps> = () => {
 			</form>
 
 			<div className="d-flex justify-content-center">
-				<code className="text-light">{message}</code>
+				<code className={messageCSS}>{message}</code>
 			</div>
 		</div>
 	)
