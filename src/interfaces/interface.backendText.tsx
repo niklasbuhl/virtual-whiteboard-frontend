@@ -1,7 +1,7 @@
-interface IFrontendText {
+interface IBackendText {
 	text: string
 	x: number
 	y: number
 }
 
-export default IFrontendText
+export default IBackendText

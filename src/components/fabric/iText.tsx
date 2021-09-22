@@ -2,7 +2,7 @@ import axios from "axios"
 import { fabric } from "fabric"
 import checkViewportBoundaries from "../../functions/checkViewportBoundaries"
 import ICoords from "../../interfaces/interface.coords"
-import IFrontendText from "../../interfaces/interface.backendText"
+import IBackendText from "../../interfaces/interface.backendText"
 
 export const getAllTexts = async (canvas: fabric.Canvas) => {
 	const url = process.env.REACT_APP_BACKEND_URL + "/text/getAll"
@@ -195,7 +195,7 @@ const addIText = async (
 		try {
 			const url = process.env.REACT_APP_BACKEND_URL + "/text/"
 
-			var newText: IFrontendText = {
+			var newText: IBackendText = {
 				text: text,
 				x: position.x,
 				y: position.y,
@@ -212,6 +212,8 @@ const addIText = async (
 			return
 		}
 	}
+
+	console.log(t)
 
 	canvas.add(t)
 }

@@ -2,7 +2,7 @@ import { fabric } from "fabric"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../../context/authContextProvider"
 import { Tool, ToolContext } from "../../context/toolContext"
-import addImageURL, { deleteImage } from "./image"
+import addImageURL, { getAllImages, deleteImage } from "./image"
 import addIText, { deleteText, getAllTexts } from "./iText"
 import editPath, { deletePath } from "./path"
 
@@ -45,13 +45,20 @@ const Canvas = () => {
 
 		// Get all content from backend
 		getAllTexts(c)
+		getAllImages(c)
+
+		/*
 
 		addImageURL(
 			c,
 			"https://www.pngall.com/wp-content/uploads/2016/07/Sun-Download-PNG.png",
 			{ x: 200, y: 200 },
-			"testImage"
+			{ x: 0.5, y: 0.5 },
+			"testImage",
+			false
 		)
+
+		*/
 
 		setCanvas(c)
 	}, [])
@@ -85,7 +92,14 @@ const Canvas = () => {
 					console.log(imageURL)
 
 					if (imageURL)
-						addImageURL(canvas, imageURL, { x: 200, y: 200 }, undefined, false)
+						addImageURL(
+							canvas,
+							imageURL,
+							{ x: 200, y: 200 },
+							{ x: 0.5, y: 0.5 },
+							undefined,
+							false
+						)
 
 					break
 
@@ -120,6 +134,7 @@ const Canvas = () => {
 
 					// Get all objects from server
 					getAllTexts(canvas)
+					getAllImages(canvas)
 
 					break
 

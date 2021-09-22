@@ -148,8 +148,4 @@ export const postPath = (path: fabric.Path) => {
 	console.log("TODO Save new path to backend...")
 }
 
-export const putPath = (path: fabric.Path | IPathInfo) => {}
-
-export const getPath = () => {}
-
 export default editPath
