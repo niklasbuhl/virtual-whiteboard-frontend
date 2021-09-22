@@ -9,6 +9,8 @@ import IFrontendText from "../../interfaces/interface.backendText"
 export const getAllTexts = async (canvas: fabric.Canvas) => {
 	const url = process.env.REACT_APP_BACKEND_URL + "/text/getAll"
 
+	console.log(url)
+
 	const res = await axios.get(url)
 
 	const texts = res.data
@@ -169,7 +171,7 @@ const addIText = async (
 			console.log(
 				`Text Moved pX: ${options.target.left}, pY: ${options.target.top}`
 			)
-			
+
 			// console.log(options)
 
 			// console.log(t.vwb_id)
